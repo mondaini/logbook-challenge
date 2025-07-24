@@ -5,7 +5,7 @@
 - [x] Map PascalCase import keys to model fields using ModelSerializer
 - [x] Validate and import Aircraft data
 - [x] Validate and import Flight data (ModelSerializer mapping)
-- [ ] Add support for additional tables/entities as needed
+- [x] Add support for additional tables/entities as needed
 
 ## Django App & Models
 - [x] Create Django app `pilotlog`
@@ -25,4 +25,4 @@
 ## Documentation & Submission
 - [x] Write README with setup, usage, and extension instructions
 - [x] Push code to public GitHub repository
-- [ ] Share direct link to the repository (not just org/user page) 
+- [x] Share direct link to the repository (not just org/user page) 
