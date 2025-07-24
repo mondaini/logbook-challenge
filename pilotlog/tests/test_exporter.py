@@ -102,7 +102,7 @@ def test_export_flights_to_csv(tmp_path):
         record_modified=1616320991,
     )
     # Create a sample Flight
-    flight = Flight.objects.create(
+    Flight.objects.create(
         guid="FF8CC30B-07F3-4C4C-9602-F93A2A726829",
         aircraft=aircraft,
         pf=True,
@@ -196,59 +196,61 @@ def test_export_with_actual_data():
     """Test CSV export with real Aircraft and Flight data"""
     # Create test data
     aircraft = Aircraft.objects.create(
-        guid='12345678-1234-5678-9abc-123456789008',
-        make='Cessna',
-        model='C172',
+        guid="12345678-1234-5678-9abc-123456789008",
+        make="Cessna",
+        model="C172",
         aircraft_class=1,
         power=1,
         seats=4,
-        company='Flight School',
+        company="Flight School",
         cond_log=50,
         category=1,
-        ref_search='C172',
-        reference='N12345',
+        ref_search="C172",
+        reference="N12345",
         complex=False,
         high_perf=False,
-        record_modified=1234567890
+        record_modified=1234567890,
     )
-    
+
     pilot = Pilot.objects.create(
-        guid='12345678-1234-5678-9abc-123456789009',
-        pilot_name='Jane Pilot',
-        pilot_ref='P002',
-        company='Flight School',
-        pilot_search='Jane Pilot',
-        record_modified=1234567890
+        guid="12345678-1234-5678-9abc-123456789009",
+        pilot_name="Jane Pilot",
+        pilot_ref="P002",
+        company="Flight School",
+        pilot_search="Jane Pilot",
+        record_modified=1234567890,
     )
-    
-    flight = Flight.objects.create(
-        guid='12345678-1234-5678-9abc-123456789010',
+
+    Flight.objects.create(
+        guid="12345678-1234-5678-9abc-123456789010",
         aircraft=aircraft,
         p1=pilot,
-        route='KBOS-KPVD',
+        route="KBOS-KPVD",
         pf=True,
         min_total=180,
         min_pic=180,
         pax=1,
-        flight_search='EXPORT-TEST-SEARCH',
-        record_modified=1234567890
+        flight_search="EXPORT-TEST-SEARCH",
+        record_modified=1234567890,
     )
-    
+
     # Test aircraft export
     buf = io.StringIO()
     export_aircraft_to_csv(buf)
     aircraft_csv = buf.getvalue()
     buf.close()
-    
-    assert 'Cessna' in aircraft_csv
-    assert 'C172' in aircraft_csv
-    assert '12345678-1234-5678-9abc-123456789008' in aircraft_csv
-    
+
+    assert "Cessna" in aircraft_csv
+    assert "C172" in aircraft_csv
+    assert "12345678-1234-5678-9abc-123456789008" in aircraft_csv
+
     # Test flight export
     buf = io.StringIO()
     export_flights_to_csv(buf)
     flight_csv = buf.getvalue()
     buf.close()
-    
-    assert '12345678-1234-5678-9abc-123456789008' in flight_csv  # Should contain aircraft ID
-    assert 'KBOS-KPVD' in flight_csv
+
+    assert (
+        "12345678-1234-5678-9abc-123456789008" in flight_csv
+    )  # Should contain aircraft ID
+    assert "KBOS-KPVD" in flight_csv

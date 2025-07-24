@@ -58,7 +58,7 @@ def test_aircraft_import_with_minimal_data():
     payload = {
         "AircraftCode": "12345678-1234-5678-9abc-123456789012",
         "Make": "Cessna",
-        "Model": "C172", 
+        "Model": "C172",
         "Class": 2,
         "Company": "Flight School",
         "CondLog": 100,
@@ -80,38 +80,38 @@ def test_flight_import_with_foreign_keys():
     """Test Flight import with foreign key relationships"""
     # Create related objects first
     aircraft = Aircraft.objects.create(
-        guid='12345678-1234-5678-9abc-123456789001',
-        make='Boeing',
-        model='737',
+        guid="12345678-1234-5678-9abc-123456789001",
+        make="Boeing",
+        model="737",
         aircraft_class=1,
         power=2,
         seats=150,
-        company='Airline',
+        company="Airline",
         cond_log=100,
         category=1,
-        ref_search='B737',
-        reference='N12345',
-        record_modified=1234567890
+        ref_search="B737",
+        reference="N12345",
+        record_modified=1234567890,
     )
     pilot = Pilot.objects.create(
-        guid='12345678-1234-5678-9abc-123456789002',
-        pilot_name='John Doe',
-        pilot_ref='P001',
-        company='Airline',
-        pilot_search='John Doe',
-        record_modified=1234567890
+        guid="12345678-1234-5678-9abc-123456789002",
+        pilot_name="John Doe",
+        pilot_ref="P001",
+        company="Airline",
+        pilot_search="John Doe",
+        record_modified=1234567890,
     )
     airfield = Airfield.objects.create(
-        guid='12345678-1234-5678-9abc-123456789003',
-        af_name='Test Airport',
-        af_icao='TEST',
-        af_iata='TST',
+        guid="12345678-1234-5678-9abc-123456789003",
+        af_name="Test Airport",
+        af_icao="TEST",
+        af_iata="TST",
         af_cat=1,
         tz_code=1,
         latitude=123456,
         longitude=654321,
         af_country=1,
-        record_modified=1234567890
+        record_modified=1234567890,
     )
 
     payload = {
@@ -128,7 +128,7 @@ def test_flight_import_with_foreign_keys():
     serializer = FlightImportSerializer(data=payload)
     assert serializer.is_valid(), serializer.errors
     flight = serializer.save()
-    
+
     assert str(flight.guid) == "12345678-1234-5678-9abc-123456789004"
     assert str(flight.aircraft.guid) == str(aircraft.guid)
     assert str(flight.p1.guid) == str(pilot.guid)
@@ -153,7 +153,7 @@ def test_flight_import_with_missing_foreign_keys():
     serializer = FlightImportSerializer(data=payload)
     assert serializer.is_valid(), serializer.errors
     flight = serializer.save()
-    
+
     assert str(flight.guid) == "12345678-1234-5678-9abc-123456789005"
     assert flight.aircraft is None
     assert flight.p1 is None
@@ -166,62 +166,65 @@ def test_export_with_actual_data():
     """Test CSV export with real Aircraft and Flight data"""
     # Create test data
     aircraft = Aircraft.objects.create(
-        guid='12345678-1234-5678-9abc-123456789008',
-        make='Cessna',
-        model='C172',
+        guid="12345678-1234-5678-9abc-123456789008",
+        make="Cessna",
+        model="C172",
         aircraft_class=1,
         power=1,
         seats=4,
-        company='Flight School',
+        company="Flight School",
         cond_log=50,
         category=1,
-        ref_search='C172',
-        reference='N12345',
+        ref_search="C172",
+        reference="N12345",
         complex=False,
         high_perf=False,
-        record_modified=1234567890
+        record_modified=1234567890,
     )
-    
+
     pilot = Pilot.objects.create(
-        guid='12345678-1234-5678-9abc-123456789009',
-        pilot_name='Jane Pilot',
-        pilot_ref='P002',
-        company='Flight School',
-        pilot_search='Jane Pilot',
-        record_modified=1234567890
+        guid="12345678-1234-5678-9abc-123456789009",
+        pilot_name="Jane Pilot",
+        pilot_ref="P002",
+        company="Flight School",
+        pilot_search="Jane Pilot",
+        record_modified=1234567890,
     )
-    
-    flight = Flight.objects.create(
-        guid='12345678-1234-5678-9abc-123456789010',
+
+    Flight.objects.create(
+        guid="12345678-1234-5678-9abc-123456789010",
         aircraft=aircraft,
         p1=pilot,
-        route='KBOS-KPVD',
+        route="KBOS-KPVD",
         pf=True,
         min_total=180,
         min_pic=180,
         pax=1,
-        flight_search='EXPORT-TEST-SEARCH',
-        record_modified=1234567890
+        flight_search="EXPORT-TEST-SEARCH",
+        record_modified=1234567890,
     )
-    
+
     # Test aircraft export
     buf = io.StringIO()
     export_aircraft_to_csv(buf)
     aircraft_csv = buf.getvalue()
     buf.close()
-    
-    assert 'Cessna' in aircraft_csv
-    assert 'C172' in aircraft_csv
-    assert '12345678-1234-5678-9abc-123456789008' in aircraft_csv
-    
+
+    assert "Cessna" in aircraft_csv
+    assert "C172" in aircraft_csv
+    assert "12345678-1234-5678-9abc-123456789008" in aircraft_csv
+
     # Test flight export
     buf = io.StringIO()
     export_flights_to_csv(buf)
     flight_csv = buf.getvalue()
     buf.close()
-    
-    assert '12345678-1234-5678-9abc-123456789008' in flight_csv  # Should contain aircraft ID
-    assert 'KBOS-KPVD' in flight_csv
+
+    assert (
+        "12345678-1234-5678-9abc-123456789008" in flight_csv
+    )  # Should contain aircraft ID
+    assert "KBOS-KPVD" in flight_csv
+
 
 @pytest.mark.django_db
 def test_serializer_field_validation():
@@ -229,54 +232,54 @@ def test_serializer_field_validation():
     # Test Aircraft serializer validation
     invalid_aircraft = {
         "AircraftCode": "not-a-uuid-format",  # Invalid UUID
-        "Class": "not-an-integer",            # Invalid integer
-        "Power": -1,                          # Potentially invalid value
+        "Class": "not-an-integer",  # Invalid integer
+        "Power": -1,  # Potentially invalid value
     }
     serializer = AircraftImportSerializer(data=invalid_aircraft)
     assert not serializer.is_valid()
-    assert 'Class' in serializer.errors
-    
+    assert "Class" in serializer.errors
+
     # Test Flight serializer validation
     invalid_flight = {
-        "FlightCode": "",                     # Empty required field
-        "PF": "not-a-boolean",               # Invalid boolean
-        "minTOTAL": "not-an-integer",        # Invalid integer
+        "FlightCode": "",  # Empty required field
+        "PF": "not-a-boolean",  # Invalid boolean
+        "minTOTAL": "not-an-integer",  # Invalid integer
     }
     serializer = FlightImportSerializer(data=invalid_flight)
     assert not serializer.is_valid()
-    assert 'PF' in serializer.errors
-    assert 'minTOTAL' in serializer.errors
+    assert "PF" in serializer.errors
+    assert "minTOTAL" in serializer.errors
 
 
-@pytest.mark.django_db 
+@pytest.mark.django_db
 def test_export_serializer_output():
     """Test that export serializers produce expected output format"""
     aircraft = Aircraft.objects.create(
-        guid='12345678-1234-5678-9abc-123456789011',
-        make='Piper',
-        model='PA-28',
+        guid="12345678-1234-5678-9abc-123456789011",
+        make="Piper",
+        model="PA-28",
         aircraft_class=2,
         power=1,
         seats=4,
-        company='Flying Club',
+        company="Flying Club",
         cond_log=25,
         category=1,
-        ref_search='PA28',
-        reference='N98765',
+        ref_search="PA28",
+        reference="N98765",
         complex=True,
         high_perf=False,
-        record_modified=1234567890
+        record_modified=1234567890,
     )
-    
+
     serializer = AircraftExportSerializer(aircraft)
     data = serializer.data
-    
-    assert data['AircraftID'] == '12345678-1234-5678-9abc-123456789011'
-    assert data['Make'] == 'Piper'
-    assert data['Model'] == 'PA-28'
-    assert data['Class'] == 2
-    assert data['Complex'] is True
-    assert data['HighPerformance'] is False
+
+    assert data["AircraftID"] == "12345678-1234-5678-9abc-123456789011"
+    assert data["Make"] == "Piper"
+    assert data["Model"] == "PA-28"
+    assert data["Class"] == 2
+    assert data["Complex"] is True
+    assert data["HighPerformance"] is False
     # Test that empty method fields return empty strings
-    assert data['EquipmentType'] == ''
-    assert data['Year'] == ''
+    assert data["EquipmentType"] == ""
+    assert data["Year"] == ""
