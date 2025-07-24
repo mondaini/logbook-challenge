@@ -33,7 +33,7 @@ fleek/
 ### Prerequisites
 
 - Python 3.11 or higher
-- UV package manager (recommended) or pip
+- [uv](https://github.com/astral-sh/uv) package manager (recommended for Python projects)
 
 ### Installation
 
@@ -43,23 +43,26 @@ fleek/
    cd fleek
    ```
 
-2. **Install dependencies**
+2. **Install dependencies using uv**
    ```bash
-   # Using UV (recommended)
    uv sync
-   
-   # Or using pip
-   pip install -r requirements.txt
    ```
+   This will install all dependencies as specified in `pyproject.toml`.
+
+   > **Note:** If you must use pip, you can install dependencies with:
+   > ```bash
+   > pip install -r <(uv pip compile pyproject.toml)
+   > ```
+   > But `uv` is the recommended and supported method.
 
 3. **Run migrations**
    ```bash
-   python manage.py migrate
+   uv run python manage.py migrate
    ```
 
 4. **Start the development server**
    ```bash
-   python manage.py runserver
+   uv run python manage.py runserver
    ```
 
 ### API Usage
@@ -85,40 +88,49 @@ curl -X GET http://localhost:8000/api/logbook/export/ \
 
 ```bash
 # Run all tests
-pytest
+uv run pytest
 
 # Run with coverage
-pytest --cov=pilotlog
+uv run pytest --cov=pilotlog
 
 # Run specific test file
-pytest pilotlog/tests/test_serializers.py
+uv run pytest pilotlog/tests/test_serializers.py
 ```
 
 ### Code Quality
 
+We use [ruff](https://docs.astral.sh/ruff/) for both formatting and linting. No other code quality or type checking tools are required.
+
 ```bash
 # Format code
-ruff format .
+uv run ruff format .
 
 # Lint code
-ruff check .
-
-# Type checking (if mypy is configured)
-mypy pilotlog/
+uv run ruff check .
 ```
 
 ### Database Management
 
 ```bash
 # Create new migration
-python manage.py makemigrations
+uv run python manage.py makemigrations
 
 # Apply migrations
-python manage.py migrate
+uv run python manage.py migrate
 
 # Create superuser
-python manage.py createsuperuser
+uv run python manage.py createsuperuser
 ```
+
+## Dependency Management
+
+All dependencies are managed via `pyproject.toml` using [uv](https://github.com/astral-sh/uv). This is the recommended and supported workflow for this project.
+
+- To add a new dependency:
+  ```bash
+  uv pip install <package>
+  uv pip freeze > pyproject.toml  # Or use uv's sync/lock commands as needed
+  ```
 
 ## Data Models
 
