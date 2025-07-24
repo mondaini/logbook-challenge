@@ -13,7 +13,7 @@ A Django-based pilot logbook management system designed to import data from Fore
 ## Project Structure
 
 ```
-fleek/
+/
 ├── logbook/              # Django project settings
 ├── pilotlog/             # Main Django app
 │   ├── models.py         # Database models (Aircraft, Flight, Pilot, Airfield)
@@ -40,7 +40,7 @@ fleek/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd fleek
+   cd logbook-challenge
    ```
 
 2. **Install dependencies using uv**
@@ -65,22 +65,71 @@ fleek/
    uv run python manage.py runserver
    ```
 
-### API Usage
+## API Usage
 
-#### Import Logbook Data
+### Import Logbook Data
+
+#### Using `curl`
 
 ```bash
 curl -X POST http://localhost:8000/api/logbook/import/ \
   -H "Content-Type: application/json" \
-  -d @data/import/import-pilotlog_mcc.json
+  --data-binary @data/import/import-pilotlog_mcc.json
 ```
 
-#### Export Logbook Data
+#### Using Postman
+
+1. Create a new **POST** request.
+2. Set the URL to: `http://localhost:8000/api/logbook/import/`
+3. Go to the **Body** tab, select **raw**, and choose **JSON** from the dropdown.
+4. Paste the contents of your JSON file (e.g., from `data/import/import-pilotlog_mcc.json`).
+5. Click **Send**.
+
+#### Example JSON Payload
+
+```json
+[
+  {
+    "table": "aircraft",
+    "guid": "12345678-1234-5678-9abc-123456789012",
+    "meta": {
+      "AircraftCode": "12345678-1234-5678-9abc-123456789012",
+      "Make": "Cessna",
+      "Model": "C172",
+      "Class": 2,
+      "Company": "Flight School",
+      "CondLog": 100,
+      "Category": 1,
+      "RefSearch": "C172",
+      "Reference": "N12345",
+      "Record_Modified": 1234567890
+    }
+  }
+]
+```
+
+### Export Logbook Data
+
+#### Using `curl`
 
 ```bash
-curl -X GET http://localhost:8000/api/logbook/export/ \
-  -o logbook_export.csv
+curl -X GET http://localhost:8000/api/logbook/export/ -o logbook_export.csv
 ```
+
+#### Using Postman
+
+1. Create a new **GET** request.
+2. Set the URL to: `http://localhost:8000/api/logbook/export/`
+3. Click **Send**.
+4. In the response, click **Save Response** to download the CSV file.
+
+### API Documentation (Swagger/OpenAPI)
+
+You can access interactive API documentation (Swagger UI) if you are running the server locally:
+
+- Open your browser and go to: [http://localhost:8000/api/schema/swagger-ui/](http://localhost:8000/api/schema/swagger-ui/)
+
+This provides a full, interactive interface to explore and test all available endpoints.
 
 ## Development
 
@@ -121,16 +170,6 @@ uv run python manage.py migrate
 # Create superuser
 uv run python manage.py createsuperuser
 ```
-
-## Dependency Management
-
-All dependencies are managed via `pyproject.toml` using [uv](https://github.com/astral-sh/uv). This is the recommended and supported workflow for this project.
-
-- To add a new dependency:
-  ```bash
-  uv pip install <package>
-  uv pip freeze > pyproject.toml  # Or use uv's sync/lock commands as needed
-  ```
 
 ## Data Models
 

@@ -14,16 +14,6 @@ from .importer import import_logbook_records
 logger = logging.getLogger(__name__)
 
 
-# class AircraftViewSet(viewsets.ModelViewSet):
-#     queryset = Aircraft.objects.all()
-#     serializer_class = AircraftSerializer
-
-
-# class FlightViewSet(viewsets.ModelViewSet):
-#     queryset = Flight.objects.all()
-#     serializer_class = FlightSerializer
-
-
 class LogbookViewSet(viewsets.ViewSet):
     SUPPORTED_TABLES = ["aircraft", "flight"]
 
