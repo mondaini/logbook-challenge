@@ -1,0 +1,24 @@
+[project]
+name = "fleek"
+version = "0.1.0"
+description = "Fleek Challenge - Pilot Log - Filipe Mondaini"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "django>=5.2.4",
+    "djangorestframework>=3.16.0",
+    "drf-spectacular>=0.28.0",
+    "pandas>=2.3.1",
+    "python-dotenv>=1.1.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipdb>=0.13.13",
+    "pudb>=2025.1",
+    "pytest>=8.4.1",
+    "pytest-django>=4.11.1",
+    "pytest-mock>=3.14.1",
+    "pytest-watch>=4.2.0",
+    "ruff>=0.12.4",
+]
